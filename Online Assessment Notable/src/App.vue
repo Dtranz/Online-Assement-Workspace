@@ -12,7 +12,7 @@
       style="width: 100%; height: 100%"
       class="ag-theme-alpine"
       :columnDefs="columnDefs"
-      :rowData="patientList">
+      :rowData="schedule">
     </ag-grid-vue>
   </div>
 </div>
@@ -27,10 +27,21 @@ export default {
    components: {
     AgGridVue,
   },
+  computed: {
+    patientList() {
+    this.schedule.map((patient, index) => {
+        return {
+          position: index + 1,
+          patientName: patient.patientName,
+          visitTime: patient.visitTime,
+          visitType: patient.visitType === 0 ? 'New Patient' : 'Follow-up'
+        }
+      })
+    }
+  },
   created() {
     PhysicianApi.getPhysicianList().
     then(result => {
-      console.log(result)
       this.physicianList = result.data
     }).
     catch(error => {
@@ -42,7 +53,7 @@ export default {
     return {
       physicianList: [],
       header: "notable",
-      patientList: [],
+      schedule: [],
       columnDefs: [
         {headerName: '#', field: 'position'},
         {headerName: 'Name', field: 'patientName'},
@@ -55,9 +66,16 @@ export default {
     getSchedule(id) {
     PhysicianApi.getPhysicianSchedule(id).
       then(result => {
-        console.log('Hello')
-        console.log(result.data);
-        this.patientList.map (result.data
+        let res = result.data
+        console.log('res: ', res);
+        this.schedule = res.map((patient, index) => {
+        return {
+          position: index + 1,
+          patientName: patient.patientName,
+          visitTime: patient.visitTime,
+          visitType: patient.visitType === 0 ? 'New Patient' : 'Follow-up'
+        }
+      })
       }).
       catch(error => {
         console.log('Caught err')
