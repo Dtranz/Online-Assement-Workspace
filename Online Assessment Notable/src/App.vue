@@ -88,7 +88,7 @@ export default {
 <style>
 .email {
   text-align: left;
-  margin-left: 1rem;
+  margin-left: 1.2rem;
 }
 .title {
   font-size: 4rem;

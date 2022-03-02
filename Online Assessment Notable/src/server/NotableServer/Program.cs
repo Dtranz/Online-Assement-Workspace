@@ -26,6 +26,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-app.UseCors();
-
 app.Run();
