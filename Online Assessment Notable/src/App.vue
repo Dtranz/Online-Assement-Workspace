@@ -8,15 +8,25 @@
     </ul>
   </div>
   <div class="physician-appointments">
-    <ol>
-    </ol>
+    <ag-grid-vue
+      style="width: 100%; height: 100%"
+      class="ag-theme-alpine"
+      :columnDefs="columnDefs"
+      :rowData="patientList">
+    </ag-grid-vue>
   </div>
 </div>
 </template>
 
 <script>
+import { AgGridVue } from "ag-grid-vue3";
 import PhysicianApi from './api/physician-api'
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 export default {
+   components: {
+    AgGridVue,
+  },
   created() {
     PhysicianApi.getPhysicianList().
     then(result => {
@@ -32,15 +42,22 @@ export default {
     return {
       physicianList: [],
       header: "notable",
-      patientList: []
+      patientList: [],
+      columnDefs: [
+        {headerName: '#', field: 'position'},
+        {headerName: 'Name', field: 'patientName'},
+        {headerName: 'Time', field: 'visitTime'},
+        {headerName: 'Kind', field: 'visitType'},
+      ]
     }
   },
   methods: {
     getSchedule(id) {
     PhysicianApi.getPhysicianSchedule(id).
       then(result => {
+        console.log('Hello')
         console.log(result.data);
-        this.patientList = result.data
+        this.patientList.map (result.data
       }).
       catch(error => {
         console.log('Caught err')
