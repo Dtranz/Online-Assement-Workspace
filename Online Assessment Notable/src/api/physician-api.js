@@ -1,7 +1,9 @@
 import axios from 'axios'
 
 export default {
-  getPhysicianList (physicianId) {
-    return axios.get(`/api/physician/all`)
+  getPhysicianList () {
+    return axios.get(`/api/physician/all`, {
+      withCredentials: true
+    })
   }
 }

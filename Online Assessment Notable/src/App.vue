@@ -1,81 +1,70 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+<main class="main">
+  <div class="physician-list">
+    <header class="header"> {{header}} </header>
+    <ul>
+      <li v-for="physician in physicianList" :key="physician.id" @click="console.log('hello world')"> {{physician}} </li>
+    </ul>
+  </div>
+  <div class="physician-appointments">
+    <ol>
+    </ol>
+  </div>
+</main>
 </template>
 
+<script>
+import PhysicianApi from './api/physician-api'
+// import PhysicianAppointments from './api/physician-appointments'
+export default {
+  created() {
+    PhysicianApi.getPhysicianList().
+    then(result => {
+      console.log(result);
+      this.physicianList = result
+    })
+  },
+  data () {
+    return {
+      physicianList: [],
+      header: "notable"
+    }
+  }
+}
+</script>
+
 <style>
-@import './assets/base.css';
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
+.header {
+  padding: 1rem 0rem 1rem 0rem;
+  margin-left: 5rem;
+  width: 100%;
+  text-align: left;
+  color: blue;
+  font-size: 3rem;
+  font-weight: bold;
 }
 
-header {
-  line-height: 1.5;
+.main {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  background-color: #F9F6F0;
+  overflow: hidden;
+}
+.physician-list {
+  /* padding: 1rem; */
+  margin-left: 0;
+  align-self: flex-start;
+  width: 30vw;
+  height: inherit; 
+  background-color: #F0F0F0;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+.physician-appointments {
+  background-color:red;
+  width: 70vw;
+  height: inherit; 
+  background-color: white;
 }
 </style>
