@@ -1,42 +1,71 @@
 <template>
-<main class="main">
+<div class="main">
   <div class="physician-list">
     <header class="header"> {{header}} </header>
+    <h1> Physicians </h1>
     <ul>
-      <li v-for="physician in physicianList" :key="physician.id" @click="console.log('hello world')"> {{physician}} </li>
+      <li class="physicianList" v-for="physician in physicianList" :key="physician.id" @click="getSchedule(physician.id)"> {{physician.name}} </li>
     </ul>
   </div>
   <div class="physician-appointments">
     <ol>
     </ol>
   </div>
-</main>
+</div>
 </template>
 
 <script>
 import PhysicianApi from './api/physician-api'
-// import PhysicianAppointments from './api/physician-appointments'
 export default {
   created() {
     PhysicianApi.getPhysicianList().
     then(result => {
-      console.log(result);
-      this.physicianList = result
+      console.log(result)
+      this.physicianList = result.data
+    }).
+    catch(error => {
+      console.log('Caught err')
+      console.log(error);
     })
   },
   data () {
     return {
       physicianList: [],
-      header: "notable"
+      header: "notable",
+      patientList: []
+    }
+  },
+  methods: {
+    getSchedule(id) {
+    PhysicianApi.getPhysicianSchedule(id).
+      then(result => {
+        console.log(result.data);
+        this.patientList = result.data
+      }).
+      catch(error => {
+        console.log('Caught err')
+        console.log(error);
+      })    
     }
   }
 }
 </script>
 
 <style>
+h1 {
+  margin-left: 1em;
+}
+.physicianList {
+  transition: all .2s ease-in-out;
+  cursor: pointer;
+}
+
+.physicianList:hover {
+  transform: translateX(5rem);
+}
 .header {
   padding: 1rem 0rem 1rem 0rem;
-  margin-left: 5rem;
+  margin-left: .74em;
   width: 100%;
   text-align: left;
   color: blue;
