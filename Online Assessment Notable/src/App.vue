@@ -4,12 +4,14 @@
     <header class="header"> {{header}} </header>
     <h1> Physicians </h1>
     <ul>
-      <li class="physicianList" v-for="physician in physicianList" :key="physician.id" @click="getSchedule(physician.id)"> {{physician.name}} </li>
+      <li class="physicianList" v-for="physician in physicianList" :key="physician.id" @click="getSchedule(physician.name, physician.id)"> {{physician.name}} </li>
     </ul>
   </div>
   <div class="physician-appointments">
+    <h2 class="title"> {{selected}} </h2>
+    <h3 class="email"> {{email}} </h3>
     <ag-grid-vue
-      style="width: 100%; height: 100%"
+      style="width: 100%; height: 80%; position: absolute; bottom: 0px;"
       class="ag-theme-alpine"
       :columnDefs="columnDefs"
       :rowData="schedule">
@@ -28,15 +30,10 @@ export default {
     AgGridVue,
   },
   computed: {
-    patientList() {
-    this.schedule.map((patient, index) => {
-        return {
-          position: index + 1,
-          patientName: patient.patientName,
-          visitTime: patient.visitTime,
-          visitType: patient.visitType === 0 ? 'New Patient' : 'Follow-up'
-        }
-      })
+    email() {
+      console.log('good lord');
+      return this.selected.split(' ').slice(-1).join(' ') + "@notablehealth.com"
+
     }
   },
   created() {
@@ -51,6 +48,7 @@ export default {
   },
   data () {
     return {
+      selected: '',
       physicianList: [],
       header: "notable",
       schedule: [],
@@ -63,7 +61,8 @@ export default {
     }
   },
   methods: {
-    getSchedule(id) {
+    getSchedule(name, id) {
+      this.selected = name;
     PhysicianApi.getPhysicianSchedule(id).
       then(result => {
         let res = result.data
@@ -87,6 +86,16 @@ export default {
 </script>
 
 <style>
+.email {
+  text-align: left;
+  margin-left: 1rem;
+}
+.title {
+  font-size: 4rem;
+  text-align: left;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+}
 h1 {
   margin-left: 1em;
 }
@@ -126,6 +135,7 @@ h1 {
 }
 
 .physician-appointments {
+  position: relative;
   background-color:red;
   width: 70vw;
   height: inherit; 
